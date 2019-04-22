@@ -25,13 +25,6 @@ export default class Main extends Component {
     };
 
     createUserCard = (card) => {
-        // const userCard = document.createElement('div');
-        // userCard.classList.add('list__user');
-        //
-        // userCard.appendChild(this.createUserAvatar());
-        // userCard.appendChild(this.createUserInfoBlock());
-        // userCard.appendChild(this.createCostBlock());
-
         return (
             <div className='list__user user'>
                 {this.createUserAvatar(card)}
@@ -42,13 +35,6 @@ export default class Main extends Component {
     };
 
     createUserAvatar = (card) => {
-        // const userPhotoBlock = document.createElement('div');
-        // userPhotoBlock.classList.add('user__photo-wrapper');
-        // const photo = document.createElement('img');
-        // photo.classList.add('user__photo');
-        // photo.setAttribute('src', '{user1}');
-        // userPhotoBlock.appendChild(photo);
-
         return (
             <div className='user__photo-wrapper'>
                 <img className='user__photo' src={card.logo}/>
@@ -69,10 +55,6 @@ export default class Main extends Component {
     };
 
     createCostBlock = (card) => {
-        // const costBlock = document.createElement('div');
-        // costBlock.classList.add('user__cost');
-        // costBlock.innerText = `Цена от ${300}₽/сутки`;
-
         const cost = '300';
         return (
             <div className='user__cost'>
