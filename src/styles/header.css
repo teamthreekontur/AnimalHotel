@@ -1,0 +1,44 @@
+
+.header {
+    height: 68px;
+    min-width: 1000px;
+}
+
+.header__logo {
+    display: flex;
+    align-items: center;
+    align-self: center;
+}
+
+.logo {
+    width: 315px;
+}
+
+.logo__img {
+    height: 70px;
+}
+
+.logo__link {
+    margin-left: 10px;
+    line-height: 22px;
+    font-size: 22px;
+}
+
+.link {
+    color: #000;
+    text-decoration: none;
+}
+
+.header__menu{
+    margin-left: auto;
+    align-self: center;
+    margin-right: 20px;
+}
+
+.menu{
+    color: #3d8581;
+}
+
+.menu:hover{
+    color: #53BCB8;
+}
