@@ -1,9 +1,9 @@
 import React, {Component, Fragment} from "react";
 import Header from './Header.js';
-import Main from './Main';
+import Main from "./Main";
 import Footer from './Footer';
+import '../styles/1normalize.css';
 import '../styles/style.css';
-import '../styles/normalize.css';
 
 class App extends Component {
     render() {

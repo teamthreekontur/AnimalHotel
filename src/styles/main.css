@@ -1,8 +1,8 @@
 .main {
+    font-family: Roboto;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    min-height: 800px;
     min-width: 1000px;
 }
 
@@ -11,13 +11,22 @@
 
 .content {
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    min-height: 600px;
+    min-height: 400px;
     min-width: 1000px;
 }
 
 .main__page-name {
-    background-color: #34B3BB;
+    position: relative;
+    font-family: 'Neucha', cursive;
+    background-color: #33adbb;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    -moz-border-image: url("../images/wave-blue.jpg") 30 round round;
+    -webkit-border-image: url("../images/wave-blue.jpg") 30 round round;
+    -o-border-image: url("../images/wave-blue.jpg") 30 round round;
+    border-image: url("../images/wave-blue.png") 30 round;
     width: 100%;
     height: 100px;
     display: flex;
@@ -26,6 +35,20 @@
     color: #fff;
     font-size: 50px;
     letter-spacing: 3px;
+    overflow: hidden;
+}
+
+.footprint {
+    position: absolute;
+    width: 180px;
+}
+
+.page-name__footprint1 {
+    transform: translate(-400px, 30px) rotate(-5deg);
+}
+
+.page-name__footprint2 {
+    transform: translateX(350px) rotate(16deg);
 }
 
 .card-list {
@@ -39,35 +62,32 @@
 }
 
 .user {
-    margin-top: -1px;
     width: 100%;
     height: 200px;
     padding: 30px 20px;
-    border-top: 1px solid #9a9a9a;
-    border-bottom: 1px solid #9a9a9a;
+    border-bottom: 1px solid #dcdcdc;
     display: flex;
     box-sizing: border-box;
     align-items: center;
 }
 
 .user__photo-wrapper {
-    /*width: 200px;*/
 }
 
 .user__photo {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     border-radius: 100px;
 }
 
 .user__info-wrapper {
     height: 100%;
-    padding: 55px;
-    font-size: 15px;
-    width: 900px;
+    padding: 0 55px;
+    width: 100%;
 }
 
 .user__name {
+    font-family: 'Neucha', cursive;
     font-size: 30px;
     letter-spacing: 2px;
     font-weight: bold;
@@ -81,11 +101,12 @@
 
 .location__link {
     text-decoration: none;
-    color: #439895;
+    /*color: #439895;*/
+    font-weight: bold;
 }
 
 .location__link:hover {
-    color: #53BCB8;
+    /*color: #53BCB8;*/
 }
 
 .location__link:active {
@@ -98,10 +119,116 @@
 }
 
 .user__cost {
-    width: 80px;
+    width: 70px;
+    text-align: center;
 }
 
 .cost__bold {
+    font-family: 'Neucha', cursive;
     font-size: 20px;
     font-weight: bold;
+}
+
+.main__serachForm{
+    width: 100%;
+    display: flex;
+}
+
+@media only screen and (min-width : 320px) and (max-width : 580px) {
+    /* стили */
+    .main {
+        min-width: 320px;
+    }
+
+    .content {
+        min-height: 400px;
+        min-width: 320px;
+    }
+
+    .main__page-name {
+        height: 80px;
+        font-size: 50px;
+        letter-spacing: 3px;
+    }
+
+    .footprint {
+        position: absolute;
+        width: 180px;
+    }
+
+    .page-name__footprint1 {
+        transform: translate(-400px, 30px) rotate(-5deg);
+    }
+
+    .page-name__footprint2 {
+        transform: translateX(350px) rotate(16deg);
+    }
+
+    .user {
+        width: 100%;
+        height: 200px;
+        padding: 30px 20px;
+        border-bottom: 1px solid #dcdcdc;
+        display: flex;
+        box-sizing: border-box;
+        align-items: center;
+    }
+
+    .user__photo-wrapper {
+    }
+
+    .user__photo {
+        width: 140px;
+        height: 140px;
+        border-radius: 100px;
+    }
+
+    .user__info-wrapper {
+        height: 100%;
+        padding: 0 55px;
+        width: 100%;
+    }
+
+    .user__name {
+        font-family: 'Neucha', cursive;
+        font-size: 30px;
+        letter-spacing: 2px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .user__link {
+        text-decoration: none;
+        color: #439895;
+    }
+
+    .location__link {
+        text-decoration: none;
+        /*color: #439895;*/
+        font-weight: bold;
+    }
+
+    .location__link:hover {
+        /*color: #53BCB8;*/
+    }
+
+    .location__link:active {
+        color: #000;
+    }
+
+    .user__description {
+        margin-top: 20px;
+
+    }
+
+    .user__cost {
+        width: 70px;
+        text-align: center;
+    }
+
+    .cost__bold {
+        font-family: 'Neucha', cursive;
+        font-size: 20px;
+        font-weight: bold;
+    }
 }

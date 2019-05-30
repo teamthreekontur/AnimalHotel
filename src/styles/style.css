@@ -4,6 +4,7 @@ html {
     font-weight: normal;
     width: 100%;
     height: 100%;
+    font-size: 14px;
 }
 
 body {
@@ -13,10 +14,12 @@ body {
 
 .wrap {
     display: flex;
+    position: relative;
     flex-direction: column;
     flex-grow: 1;
     height: 100%;
     width: 100%;
+    background: url("../images/backgroundMain.jpg");
 }
 
 .wrapper {
@@ -24,6 +27,61 @@ body {
     display: flex;
     flex-grow: 1;
     min-width: 1000px;
-    max-width: 1040px;
+    max-width: 1140px;
     margin: 0 auto;
+}
+
+._column{
+    flex-direction: column;
+}
+
+.link {
+    outline: none;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+#loader-layout {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    opacity: 1;
+    visibility: visible;
+    transition: 0.5s all;
+}
+
+#loader {
+
+    background-color: rgba(51, 173, 187, 0.7);
+    border-radius: 30px;
+}
+
+@media only screen and (min-width : 320px) and (max-width : 360px) {
+    /* стили */
+    .wrapper {
+        min-width: 320px;
+        max-width: 360px;
+    }
+}
+
+@media only screen and (min-width : 361px) and (max-width : 580px) {
+    /* стили */
+    .wrapper {
+        min-width: 361px;
+        max-width: 580px;
+    }
+}
+
+@media only screen and (min-width : 581px) and (max-width : 1000px) {
+    /* стили */
+    .wrapper {
+        min-width: 581px;
+        max-width: 1000px;
+    }
 }
