@@ -2,12 +2,14 @@ import user1 from "../images/user1.jpg";
 import user2 from "../images/user2.jpg";
 import user3 from "../images/user3.jpg";
 
-export {getCatalog, register, auth, setCookie, getCookie, deleteCookie, isLoggedIn};
+export {getCatalog,getFilterredPlaces, register, auth, setCookie, getCookie, deleteCookie, isLoggedIn};
 const path = 'https://animalhotelapi.azurewebsites.net';
 
 function getCatalog(id = '') {
     return fetch(`${path}/api/Places/${id}`)
         .then(response => {
+            if (Math.round(response.status/100) !== 2)
+                throw new Error('');
             return (response.json());
         })
         .catch(error => {
@@ -23,16 +25,15 @@ function register(login, password, confirmPassword) {
         },
         body: JSON.stringify({Login: login, Password: password, ConfirmPassword: confirmPassword})
     };
-    // return fetch(`${path}/api/Register`, options)
-    //     .then(response => {
-    //         return (response.json());
-    //     })
-    //     .catch(error => {
-    //         console.log(error);
-    //     });
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve([1]), 3000);
-    })
+    return fetch(`${path}/api/Register`, options)
+        .then(response => {
+            if (Math.round(response.status/100) !== 2)
+                throw new Error('');
+            return (response.json());
+        })
+    // return new Promise((resolve, reject) => {
+    //     setTimeout(resolve([1]), 3000);
+    // })
 }
 
 function auth(login, password) {
@@ -45,6 +46,17 @@ function auth(login, password) {
     };
     return fetch(`${path}/api/Auth`, options)
         .then(response => {
+            if (Math.round(response.status/100) !== 2)
+                throw new Error('');
+            return (response.json());
+        })
+}
+
+function getFilterredPlaces(param) {
+    return fetch(`${path}/api/Places/?placeFilterInfo.ownerId=${param}`)
+        .then(response => {
+            if (Math.round(response.status/100) !== 2)
+                throw new Error('');
             return (response.json());
         })
         .catch(error => {

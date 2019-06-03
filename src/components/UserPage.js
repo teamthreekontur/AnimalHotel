@@ -7,7 +7,7 @@ import '../styles/main.css';
 import '../styles/userpage.css';
 import Loader from "../service/loader";
 import user1 from '../images/user1.jpg';
-import noAvater from '../images/no-avatar.jpg'
+import noAvatar from '../images/no-avatar.jpg'
 
 export default class UserPageFull extends Component {
 
@@ -56,7 +56,7 @@ class UserPage extends Component {
             <div className='place__wrapper'>
                 <div className='place__head '>
                     <div className='place__photo-wrapper'>
-                        <img className='place__photo' src={noAvater}/>
+                        <img className='place__photo' src={noAvatar}/>
                     </div>
                     <div className='place__head-info'>
                         <div className='user__name _place'>{Name}</div>

@@ -41,18 +41,16 @@ export default class SignIn extends Component {
     };
 
     handleClick = (event) => {
+        let {valid} = this.state;
         event.preventDefault();
+
         Loader().start();
 
         if (!this.state.login || !this.state.passcode1) {
-            this.setState({
-                valid: false
-            });
-            Loader().stop();
-            this.handleClickOpen();
+            this.handleError();
             return;
         }
-        if (this.state.valid) {
+        if (valid) {
             const {login, passcode1} = this.state;
             auth(login, passcode1).then(value => {
                 setCookie('SessionId', value.SessionId, {expires: value.Expired});
@@ -60,13 +58,20 @@ export default class SignIn extends Component {
                 store.isLoggedIn = true;
                 updateDOM();
                 Loader().stop();
-            });
+            }).catch(error => {
+                this.handleError();
+                return
+            })
         }
         else {
-            Loader().stop();
-            this.handleClickOpen();
+            this.handleError();
             return
         }
+    };
+
+    handleError = () => {
+        Loader().stop();
+        this.handleClickOpen();
     };
 
     handleClickOpen = () => {
@@ -78,6 +83,12 @@ export default class SignIn extends Component {
     handleClose = () => {
         this.setState({
             open: false
+        })
+    };
+
+    validate = (value) => {
+        this.setState({
+            valid: value
         })
     };
 
@@ -122,10 +133,12 @@ export default class SignIn extends Component {
 
                                 <InputText id="email" valid={this.state.valid} use="email"
                                            onInputChange={this.handleInputEmail}
+                                           onValid={this.validate}
                                            label="Введите почту" type="email"/>
 
                                 <InputText id="passcode" valid={this.state.valid} use='passcode'
                                            onInputChange={this.handleInput1}
+                                           onValid={this.validate}
                                            label="Введите пароль" type="text"/>
 
                                 <div className='button-wrapper'>

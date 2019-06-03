@@ -15,7 +15,7 @@ export default class InputText extends Component {
         this.type = props.use;
         this.validationExp = {
             email: "^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$",
-            passcode: '(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$'
+            passcode: '(?=^.{12,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$'
         }
     }
 
@@ -24,15 +24,18 @@ export default class InputText extends Component {
             this.setState({
                 valid: true,
                 classes: this.state.classes + ' _valid'
-            })
+            });
+            if (this.props.onValid)
+                this.props.onValid(true);
         }
         else {
             this.setState({
                 valid: false,
                 classes: this.state.classes + ' _invalid'
-            })
+            });
+            if (this.props.onValid)
+                this.props.onValid(false);
         }
-
 
     };
 
