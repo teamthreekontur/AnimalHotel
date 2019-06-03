@@ -2,15 +2,30 @@ import React, {Component, Fragment} from "react";
 import '../styles/style.css';
 import '../styles/form.css';
 import PageName from "./PageName";
-import {Link} from "react-router-dom";
-import InputText from "./InputText"
-import {auth} from "../service/API";
+import {Redirect, Link} from "react-router-dom";
+import InputText from "./InputText";
+import {auth, setCookie, getCookie, deleteCookie, isLoggedIn} from "../service/API";
+import SignUp from "./SignUp";
+import Loader from '../service/loader';
+import {store, updateDOM} from '../index';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grow from '@material-ui/core/Grow';
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Grow ref={ref} {...props} />;
+});
 
 
 export default class SignIn extends Component {
     constructor(props) {
         super(props);
-        this.state = {login: '', passcode1: '', passcode2: '', valid: ''};
+        this.state = {login: '', passcode1: '', valid: '', open: false};
     }
 
     handleInputEmail = (value) => {
@@ -27,11 +42,72 @@ export default class SignIn extends Component {
 
     handleClick = (event) => {
         event.preventDefault();
+        Loader().start();
 
-        const {login, passcode1} = this.state;
-        auth(login, passcode1).then(value => console.log(value));
-
+        if (!this.state.login || !this.state.passcode1) {
+            this.setState({
+                valid: false
+            });
+            Loader().stop();
+            this.handleClickOpen();
+            return;
+        }
+        if (this.state.valid) {
+            const {login, passcode1} = this.state;
+            auth(login, passcode1).then(value => {
+                setCookie('SessionId', value.SessionId, {expires: value.Expired});
+                setCookie('UserId', value.UserId);
+                store.isLoggedIn = true;
+                updateDOM();
+                Loader().stop();
+            });
+        }
+        else {
+            Loader().stop();
+            this.handleClickOpen();
+            return
+        }
     };
+
+    handleClickOpen = () => {
+        this.setState({
+            open: true
+        })
+    };
+
+    handleClose = () => {
+        this.setState({
+            open: false
+        })
+    };
+
+    renderModal = () => {
+        return (
+            <div>
+                <Dialog
+                    open={this.state.open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle id="alert-dialog-slide-title">{"Данные введены не верно!"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description">
+                            Проверьте корректность заполнения полей
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color='secondary'>
+                            Закрыть
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        );
+    };
+
 
     render() {
         return (
@@ -39,6 +115,8 @@ export default class SignIn extends Component {
                 <PageName name={"Вход"}/>
                 <div className='main__content content'>
                     <div className='wrapper'>
+                        {this.renderModal()}
+
                         <div className="form-wrapper">
                             <form className="form _login-form" method="post">
 
@@ -53,6 +131,7 @@ export default class SignIn extends Component {
                                 <div className='button-wrapper'>
                                     <input className="form__button _submit" onClick={this.handleClick} type="submit"
                                            value="Отправить"/>
+                                    {store.isLoggedIn && <Redirect to='/account'/>}
 
                                     <Link className="link form__link" to="/signup">Нет аккаунта?</Link>
                                 </div>

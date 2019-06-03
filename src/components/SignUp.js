@@ -5,15 +5,25 @@ import '../styles/style.css';
 import '../styles/form.css';
 import PageName from "./PageName";
 import InputText from "./InputText"
-import Modal from "@skbkontur/react-ui/Modal"
-import Gapped from '@skbkontur/react-ui/Gapped';
-import Button from '@skbkontur/react-ui/Button';
+import Loader from '../service/loader'
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grow from '@material-ui/core/Grow';
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Grow ref={ref} {...props} />;
+});
 
 
 export default class SignUp extends Component {
     constructor(props) {
         super(props);
-        this.state = {login: '', passcode1: '', passcode2: '', valid: '', modal: false};
+        this.state = {login: '', passcode1: '', passcode2: '', valid: false, open: false};
     }
 
     handleInputEmail = (value) => {
@@ -34,42 +44,85 @@ export default class SignUp extends Component {
         });
     };
 
-    handleModalHide = () => {
-        this.setState({modal: false});
-    };
-
     handleClick = (event) => {
         event.preventDefault();
 
-        if (this.state.passcode1 !== this.state.passcode2) {
+        Loader().start();
+
+        if (!this.state.login || this.state.passcode1 !== this.state.passcode2) {
             this.setState({
                 valid: false
             });
+            Loader().stop();
+            this.handleClickOpen();
+            return;
+        }
+        if (this.state.valid) {
+            this.setState({
+                valid: true
+            });
+            this.handleClose();
+            const {login, passcode1, passcode2} = this.state;
+            register(login, passcode1, passcode2).then(() => {
+                Loader().stop();
+            });
         }
         else {
-            const {login, passcode1, passcode2} = this.state;
-            register(login, passcode1, passcode2).then(() => this.setState({modal: true}));
+            Loader().stop();
+            this.handleClickOpen();
+            return
         }
     };
 
-    renderModal() {
+    handleClickOpen = () => {
+        this.setState({
+            open: true
+        })
+    };
+
+    handleClose = () => {
+        this.setState({
+            open: false
+        })
+    };
+
+    renderModal = () => {
         return (
-            <Modal onClose={this.handleModalHide}>
-                <Modal.Header>Пользователь сохранен</Modal.Header>
-                <Modal.Footer>
-                    <Gapped gap={20} vertical={true}> <Button onClick={this.closeModal}>Закрыть</Button></Gapped>
-                </Modal.Footer>
-            </Modal>
+            <div>
+                <Dialog
+                    open={this.state.open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={this.handleClose}
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle id="alert-dialog-slide-title">{"Данные введены не верно!"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description">
+                            Проверьте корректность заполнения полей:
+                            Пароль должен содержать не менее 12 символов, хотя бы одну цифру и хотя бы одну прописную букву
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color='secondary'>
+                            Закрыть
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         );
     };
 
     render() {
+
         return (
             <Fragment>
                 <PageName name={"Регистрация"}/>
                 <div className='main__content content'>
                     <div className='wrapper'>
-                        {this.state.modal && this.renderModal()}
+                        {this.renderModal()}
+
                         <div className="form-wrapper">
                             <form className="form _login-form">
 
@@ -87,13 +140,12 @@ export default class SignUp extends Component {
 
 
                                 <div className='button-wrapper'>
-                                    <input className="form__button _submit" onClick={this.handleClick} type="submit"
+                                    <input className="form__button _submit" onClick={this.handleClick}
+                                           type="submit"
                                            value="Отправить"/>
-
                                     <Link className="link form__link" to="/signin">Есть аккаунт?</Link>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 </div>

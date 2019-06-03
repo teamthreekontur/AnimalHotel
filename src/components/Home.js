@@ -6,6 +6,7 @@ import Loader from "../service/loader";
 import search from '../images/search.png';
 import call from '../images/call.png';
 import mail from '../images/mail.png';
+import {store, updateDOM} from "../index";
 
 
 function InstrucionsBlock(props) {
@@ -23,13 +24,19 @@ function InstrucionsBlock(props) {
 }
 
 export default class Home extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         Loader().start();
     }
+
     componentDidMount() {
         setTimeout(() => Loader().stop(), 500);
     }
+
+    handlerClick = (value) => {
+        store.activeMenu = value;
+        updateDOM();
+    };
 
     render() {
         return (
@@ -42,7 +49,9 @@ export default class Home extends Component {
                                     Не с кем оставить домашнее животное на время отъезда?
                                 </div>
                                 <div className='start-page__title _small'>Мы поможем!</div>
-                                <Link className='start-page__link link' to='/search'>Найти зооняню</Link>
+                                <Link className='start-page__link link' onClick={() => this.handlerClick('/search')}
+                                      to='/search'>Найти
+                                    зооняню</Link>
                             </div>
                         </div>
                     </div>

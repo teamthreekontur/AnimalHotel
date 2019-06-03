@@ -6,6 +6,10 @@ import '../styles/1normalize.css';
 import '../styles/style.css';
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
         return (
             <Fragment>
@@ -18,5 +22,6 @@ class App extends Component {
         );
     }
 }
+
 
 export default App;

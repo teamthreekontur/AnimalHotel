@@ -3,30 +3,41 @@ import {NavLink, Link} from 'react-router-dom'
 import '../styles/style.css';
 import '../styles/header.css';
 import logo from '../images/logo1.png';
+import {store, updateDOM} from "../index";
 
 function LogoHeader({link, name}) {
     return (
-        <div className="header__logo logo">
-            <Link className='link' to="/"><img className="logo__img" src={logo} alt="picture"/></Link>
-            <Link className="logo__link link" to="/">{name}</Link>
-        </div>
+        <Link to='/' onClick={() => {
+            store.activeMenu = '/';
+            updateDOM()
+        }} className="header__logo logo link">
+            <div className='link'><img className="logo__img" src={logo} alt="picture"/></div>
+            <div className="logo__link link">{name}</div>
+        </Link>
     )
 }
 
 class NavMenuHeader extends Component {
     constructor(props) {
         super(props);
+        this.accountLink = () => {
+            return store.isLoggedIn ? '/account' : '/signin';
+        }
     }
 
     mouseOverHandler = (child) => {
         const block = document.getElementById('hoverBlock');
+        block.style.width = '100px';
 
+        if (child === 3) {
+            block.style.width = '63px';
+        }
         block.style.transform = `translateX(${child * 100}px)`;
     };
 
     mouseOutHandler = () => {
         const block = document.getElementById('hoverBlock');
-
+        block.removeAttribute("style");
         block.style.transform = '';
     };
 
@@ -39,6 +50,10 @@ class NavMenuHeader extends Component {
                 block.classList.add('_active' + child);
         }
     };
+
+    componentDidUpdate() {
+        this.isActiveItem();
+    }
 
     componentDidMount() {
         this.isActiveItem();
@@ -68,7 +83,7 @@ class NavMenuHeader extends Component {
                                                             onMouseOut={this.mouseOutHandler}
                                                             onClick={() => this.clickHandler(0)} exact={true} to="/"
                                                             isActive={(match, location) => {
-                                                                if (location.pathname === '/') {
+                                                                if (location.pathname === '/' || store.activeMenu === '/') {
                                                                     return true;
                                                                 }
                                                             }}
@@ -81,7 +96,7 @@ class NavMenuHeader extends Component {
                                                             onClick={() => this.clickHandler(1)} exact={true}
                                                             to="/search"
                                                             isActive={(match, location) => {
-                                                                if (location.pathname === '/search') {
+                                                                if (location.pathname === '/search' || store.activeMenu === '/search') {
                                                                     return true;
                                                                 }
                                                             }}
@@ -100,9 +115,19 @@ class NavMenuHeader extends Component {
                                                             activeClassName="_active">
                             О сервисе
                         </NavLink></li>
-                        <li className="menu__item _last "><NavLink className="link menu__link" exact={true} to="/signin"
-                                                                   activeClassName="_active">
-                            Войти
+                        <li className="menu__item  "><NavLink className="link menu__link _last" exact={true}
+                                                              to={this.accountLink()}
+                                                              onMouseOver={() => this.mouseOverHandler(3)}
+                                                              onMouseOut={this.mouseOutHandler}
+                                                              onClick={() => this.clickHandler(3)}
+                                                              isActive={(match, location) => {
+                                                                  if (location.pathname === '/signin' ||
+                                                                      location.pathname === '/signup' ||
+                                                                      location.pathname === '/account') {
+                                                                      return true;
+                                                                  }
+                                                              }}
+                                                              activeClassName="_active">
                         </NavLink></li>
                         <div className="hover-block" id='hoverBlock'></div>
                     </ul>
@@ -123,7 +148,7 @@ export default class Header extends Component {
                 <div className='header'>
                     <div className='wrapper'>
                         <LogoHeader name={'Animal Hotel'}/>
-                        <NavMenuHeader/>
+                        <NavMenuHeader isLoggedIn={this.props.isLoggedIn}/>
                     </div>
                 </div>
             </Fragment>

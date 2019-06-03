@@ -8,7 +8,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0 ;
+    padding: 20px 0;
 }
 
 .form {
@@ -112,28 +112,32 @@
     transition: all .2s;
 }
 
-._submit{
+.form__button:disabled {
+    background-color: #dcdcdc;
+    border-color: #dcdcdc;
+}
+
+._submit {
     border-color: #33adbb;
 }
 
-
-.form__button:hover {
+.form__button:enabled:hover {
     background-color: #33adbb;
     color: #fff;
     box-shadow: 0 0 10px rgba(51, 173, 187, 0.5);
 }
 
-.form__button:focus {
+.form__button:enabled:focus {
     border: 1px solid #2f9eab;
     background-color: #2f9eab;
     color: #fff;
     box-shadow: 0 0 10px rgba(51, 173, 187, 0.8);
 }
 
-.form__link:hover{
+.form__link:hover {
     color: #FFA97A;
 }
 
-.form__link:active{
+.form__link:active {
     color: #e2966c;
 }

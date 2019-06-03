@@ -2,7 +2,7 @@ import user1 from "../images/user1.jpg";
 import user2 from "../images/user2.jpg";
 import user3 from "../images/user3.jpg";
 
-export {getCatalog, register, auth};
+export {getCatalog, register, auth, setCookie, getCookie, deleteCookie, isLoggedIn};
 const path = 'https://animalhotelapi.azurewebsites.net';
 
 function getCatalog(id = '') {
@@ -21,7 +21,7 @@ function register(login, password, confirmPassword) {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ Login: login, Password: password, ConfirmPassword: confirmPassword })
+        body: JSON.stringify({Login: login, Password: password, ConfirmPassword: confirmPassword})
     };
     // return fetch(`${path}/api/Register`, options)
     //     .then(response => {
@@ -31,7 +31,7 @@ function register(login, password, confirmPassword) {
     //         console.log(error);
     //     });
     return new Promise((resolve, reject) => {
-        setTimeout(resolve([1]),3000);
+        setTimeout(resolve([1]), 3000);
     })
 }
 
@@ -41,7 +41,7 @@ function auth(login, password) {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ "Login": login, "Password": password })
+        body: JSON.stringify({"Login": login, "Password": password})
     };
     return fetch(`${path}/api/Auth`, options)
         .then(response => {
@@ -51,6 +51,53 @@ function auth(login, password) {
             console.log(error);
         });
 }
+
+function setCookie(name, value, options) {
+    options = options || {};
+
+    let expires = options.expires;
+
+    if (typeof expires == "number" && expires) {
+        let d = new Date();
+        d.setTime(d.getTime() + expires * 1000);
+        expires = options.expires = d;
+    }
+    if (expires && expires.toUTCString) {
+        options.expires = expires.toUTCString();
+    }
+
+    value = encodeURIComponent(value);
+
+    let updatedCookie = name + "=" + value;
+
+    for (let propName in options) {
+        updatedCookie += "; " + propName;
+        let propValue = options[propName];
+        if (propValue !== true) {
+            updatedCookie += "=" + propValue;
+        }
+    }
+
+    document.cookie = updatedCookie;
+}
+
+function getCookie(name) {
+    let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function deleteCookie(name) {
+    setCookie(name, "", {
+        expires: -1
+    })
+}
+
+function isLoggedIn() {
+    return getCookie("SessionId") ? true : false;
+}
+
 
 // function getCatalog() {
 //     return new Promise((resolve, reject) => {
