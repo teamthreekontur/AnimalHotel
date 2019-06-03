@@ -19,8 +19,8 @@ class Card extends Component {
     createUserAvatar = (data) => {
         return (
             <div className='account__button-wrapper'>
-                <button onClick={this.editHandler} className='form__button'>Выйти</button>
-                <button onClick={this.deleteHandler} className='form__button'>Выйти</button>
+                <button onClick={this.editHandler} className='form__button _accountBtn'>Изменить</button>
+                <button onClick={this.deleteHandler} className='form__button _accountBtn'>Удалить</button>
             </div>
         );
     };
@@ -33,9 +33,9 @@ class Card extends Component {
         }
 
         return (
-            <div className='user__info-wrapper '>
+            <Link to={`/${this.data.Id}`} className='user__info-wrapper link'>
                 <div className='user__description'>{Description}</div>
-            </div>
+            </Link>
         );
     };
 
@@ -49,9 +49,10 @@ class Card extends Component {
 
     editHandler = () => {
         Loader().start();
-        editPlace(this.data.Id).then(data => {
-            console.log(data);
+        editPlace(this.data.Id, 'dcawn edkjnlqwd', 'wqedwedqwd', 'dqwcqwdwqedwed', '888', '2312312', getCookie("SessionId")).then(data => {
+            this.data = data;
             Loader().stop();
+            updateDOM();
         }).catch(error => {
             console.log(error);
             Loader().stop();
@@ -60,9 +61,10 @@ class Card extends Component {
 
     deleteHandler = () => {
         Loader().start();
-        deletePlace(this.data.Id).then(data => {
+        deletePlace(this.data.Id, getCookie("SessionId")).then(data => {
             console.log(data);
             Loader().stop();
+            updateDOM();
         }).catch(error => {
             console.log(error);
             Loader().stop();
@@ -71,11 +73,11 @@ class Card extends Component {
 
     render() {
         return (
-            <Link to={`/${this.data.Id}`} className='list__user user link'>
+            <div className='list__user user link'>
                 {this.createUserAvatar(this.data)}
                 {this.createUserInfoBlock(this.data)}
                 {this.createCostBlock(this.data)}
-            </Link>
+            </div>
         );
     }
 }
@@ -90,7 +92,7 @@ export default class Account extends Component {
         };
     }
 
-    componentDidMount() {
+    getPlaces = () => {
         Loader().start();
         getFilterredPlaces(this.id).then(data => {
             const cards = this.renderUserCards(data.Places);
@@ -100,6 +102,32 @@ export default class Account extends Component {
                 places: cards
             });
             Loader().stop();
+        });
+    };
+
+    componentDidMount() {
+        Loader().start();
+
+        getFilterredPlaces(this.id).then(data => {
+            const cards = this.renderUserCards(data.Places);
+
+            this.setState({
+                userData: data.Places[0],
+                places: cards
+            });
+            Loader().stop();
+        });
+    }
+
+    componentDidUpdate() {
+
+        getFilterredPlaces(this.id).then(data => {
+            const cards = this.renderUserCards(data.Places);
+
+            this.setState({
+                userData: data.Places[0],
+                places: cards
+            });
         });
     }
 
@@ -133,7 +161,8 @@ export default class Account extends Component {
             'Qwert',
             'srdxfcjdc wndjwnklndk wjndkqwn wqd jnqj2 wjdnqj q ',
             '300',
-            '8913 932 98765').then(data => {
+            '8913 932 98765',
+            getCookie("SessionId")).then(data => {
             console.log(data);
             Loader().stop();
         }).catch(error => {
@@ -168,9 +197,6 @@ export default class Account extends Component {
                                             <div className='account__empty_title'>У вас пока нет объявлений, самое время
                                                 предложить свои услуги!
                                             </div>
-                                            <button onClick={this.addHandler} className='form__button _addBtn'>Добавить
-                                                объявление
-                                            </button>
                                         </div>
                                     </Fragment>}
 
@@ -184,6 +210,12 @@ export default class Account extends Component {
                                     {this.state.places && this.state.places}
                                 </div>
                             </Fragment>}
+
+                            <div className='addBtn-wrapper'>
+                                <button onClick={this.addHandler} className='form__button _addBtn'>Добавить
+                                    объявление
+                                </button>
+                            </div>
 
                         </div>
                     </div>

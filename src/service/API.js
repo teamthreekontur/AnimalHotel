@@ -76,19 +76,19 @@ function getFilterredPlaces(param) {
         });
 }
 
-function addPlace(name, address, description, price, contacts) {
+function addPlace(name, address, description, price, contacts, sessionId) {
     let options = {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        credentials: 'include',
         body: JSON.stringify({
             "Name": name,
             "Address": address,
             "Description": description,
             "Price": price,
-            "Contacts": contacts
+            "Contacts": contacts,
+            "SessionId": sessionId
         })
     };
     return fetch(`${path}/api/Places`, options)
@@ -99,13 +99,13 @@ function addPlace(name, address, description, price, contacts) {
         })
 }
 
-function deletePlace(id) {
+function deletePlace(id, sessionId) {
     let options = {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json"
         },
-        credentials: 'include'
+        body: JSON.stringify(sessionId)
     };
     return fetch(`${path}/api/Places/${id}`, options)
         .then(response => {
@@ -115,19 +115,19 @@ function deletePlace(id) {
         })
 }
 
-function editPlace(id, name, address, description, price, contacts) {
+function editPlace(id, name, address, description, price, contacts, sessionId) {
     let options = {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json"
         },
-        credentials: 'include',
         body: JSON.stringify({
             "Name": name,
             "Address": address,
             "Description": description,
             "Price": price,
-            "Contacts": contacts
+            "Contacts": contacts,
+            "SessionId": sessionId
         })
     };
     return fetch(`${path}/api/Places/${id}`, options)
