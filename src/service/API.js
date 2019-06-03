@@ -2,11 +2,11 @@ import user1 from "../images/user1.jpg";
 import user2 from "../images/user2.jpg";
 import user3 from "../images/user3.jpg";
 
-export {getCatalog};
+export {getCatalog, register, auth};
 const path = 'https://animalhotelapi.azurewebsites.net';
 
 function getCatalog(id = '') {
-    return fetch(`/api/Places/${id}`)
+    return fetch(`${path}/api/Places/${id}`)
         .then(response => {
             return (response.json());
         })
@@ -15,21 +15,42 @@ function getCatalog(id = '') {
         });
 }
 
-// function register() {
-//     let options = {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//     };
-//     return fetch(`${path}/api/Register`, options)
-//         .then(response => {
-//             return (response.json());
-//         })
-//         .catch(error => {
-//             console.log(error);
-//         });
-// }
+function register(login, password, confirmPassword) {
+    let options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ Login: login, Password: password, ConfirmPassword: confirmPassword })
+    };
+    // return fetch(`${path}/api/Register`, options)
+    //     .then(response => {
+    //         return (response.json());
+    //     })
+    //     .catch(error => {
+    //         console.log(error);
+    //     });
+    return new Promise((resolve, reject) => {
+        setTimeout(resolve([1]),3000);
+    })
+}
+
+function auth(login, password) {
+    let options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ "Login": login, "Password": password })
+    };
+    return fetch(`${path}/api/Auth`, options)
+        .then(response => {
+            return (response.json());
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
 
 // function getCatalog() {
 //     return new Promise((resolve, reject) => {

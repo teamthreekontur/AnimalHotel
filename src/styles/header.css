@@ -86,8 +86,10 @@
     transform: translateX(200px);
 }
 
-._active3 {
-    transform: translateX(300px);
+
+
+.burger {
+    display:none;
 }
 
 .hover-block {
@@ -138,14 +140,14 @@
         width: 200px;
         position: absolute;
         right: 0;
-        transform: translate(210px,60px);
+        transform: translate(210px, 60px);
         background-color: #38b4d2;
         box-shadow: 0 20px 15px 7px #000;
         transition: all .5s ease-out;
         z-index: 2;
     }
 
-    .header__menu:before{
+    .header__menu:before {
         content: " ";
         /*visibility: hidden;*/
         width: 100vw;
@@ -164,7 +166,7 @@
 
     .burgerOpen {
         visibility: visible;
-        transform: translate(0px,60px);
+        transform: translate(0px, 60px);
     }
 
     .menu {
@@ -181,7 +183,7 @@
         align-self: flex-start;
     }
 
-    .menu__item:active{
+    .menu__item:active {
         background-color: white;
     }
 

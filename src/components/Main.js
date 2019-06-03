@@ -6,6 +6,7 @@ import Catalog from "./Catalog";
 import Home from "./Home"
 import SignUp from "./SignUp"
 import SignIn from "./SignIn"
+import UserPageFull from './UserPage'
 import NotFound404 from "./NotFound404"
 
 
@@ -23,6 +24,7 @@ export default class Main extends Component {
                         <Route path='/search' component={Catalog}/>
                         <Route path='/signin' component={SignIn}/>
                         <Route path='/signup' component={SignUp}/>
+                        <Route path='/' component={UserPageFull}/>
                         <Route component={NotFound404}/>
                     </Switch>
                 </div>
