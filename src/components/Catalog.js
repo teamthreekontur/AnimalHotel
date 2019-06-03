@@ -99,7 +99,7 @@ class Card extends Component {
     createCostBlock = (data) => {
         return (
             <div className='user__cost'>
-                от <span className='cost__bold'>{data.Price}₽/</span>сутки
+                <span className='cost__bold'>{data.Price}₽/</span>сутки
             </div>
         );
     };

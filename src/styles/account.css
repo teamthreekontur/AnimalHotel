@@ -1,0 +1,60 @@
+.account__wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 60px 0;
+}
+
+.account__head {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 30px;
+    padding: 40px 0;
+    border-bottom: 2px solid rgba(51, 173, 187, 0.6);
+
+}
+
+.account__button-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 100%;
+}
+
+.account__head-info {
+    width: 100%;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    word-break: break-word;
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    margin-left: 50px;
+}
+
+._account {
+    font-size: 35px;
+}
+
+.account__photo {
+    width: 250px;
+    height: 250px;
+    border-radius: 200px;
+}
+
+.account__empty {
+    width: 100%;
+    text-align: center;
+}
+
+.account__empty_title {
+    text-align: center;
+    font-size: 25px;
+    letter-spacing: 1px;
+}
+
+._addBtn {
+    margin: 40px 0 10px 0;
+}

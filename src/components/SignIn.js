@@ -53,11 +53,11 @@ export default class SignIn extends Component {
         if (valid) {
             const {login, passcode1} = this.state;
             auth(login, passcode1).then(value => {
+                Loader().stop();
                 setCookie('SessionId', value.SessionId, {expires: value.Expired});
                 setCookie('UserId', value.UserId);
                 store.isLoggedIn = true;
                 updateDOM();
-                Loader().stop();
             }).catch(error => {
                 this.handleError();
                 return

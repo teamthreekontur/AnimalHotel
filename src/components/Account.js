@@ -1,12 +1,14 @@
 import PageName from "./PageName";
 import React, {Component, Fragment} from "react";
-import {Switch, Route, Link,Redirect} from 'react-router-dom'
-import {deleteCookie, getCatalog, getFilterredPlaces, getCookie} from "../service/API"
+import {Switch, Route, Link, Redirect} from 'react-router-dom'
+import {deleteCookie, getCatalog, getFilterredPlaces, getCookie, addPlace, deletePlace, editPlace} from "../service/API"
 import '../styles/style.css';
 import '../styles/main.css';
 import Loader from "../service/loader";
 import noAvatar from '../images/no-avatar.jpg'
 import {store, updateDOM} from '../index';
+import '../styles/account.css';
+
 
 class Card extends Component {
     constructor(props) {
@@ -16,25 +18,20 @@ class Card extends Component {
 
     createUserAvatar = (data) => {
         return (
-            <div className='user__photo-wrapper'>
+            <div className='account__button-wrapper'>
+                <button onClick={this.editHandler} className='form__button'>Выйти</button>
+                <button onClick={this.deleteHandler} className='form__button'>Выйти</button>
             </div>
         );
     };
 
     createUserInfoBlock = (user) => {
-        let {Name, Address, Description} = user;
+        let {Description} = user;
 
         if (Description.length >= 200) {
             Description = Description.substr(0, 200) + ' ...';
         }
 
-        if (Address.length >= 100) {
-            Address = Address.substr(0, 20) + '...';
-        }
-
-        if (Name.length >= 50) {
-            Name = Name.substr(0, 50) + '...';
-        }
         return (
             <div className='user__info-wrapper '>
                 <div className='user__description'>{Description}</div>
@@ -45,9 +42,31 @@ class Card extends Component {
     createCostBlock = (data) => {
         return (
             <div className='user__cost'>
-                от <span className='cost__bold'>{data.Price}₽/</span>сутки
+                <span className='cost__bold'>{data.Price}₽/</span>сутки
             </div>
         );
+    };
+
+    editHandler = () => {
+        Loader().start();
+        editPlace(this.data.Id).then(data => {
+            console.log(data);
+            Loader().stop();
+        }).catch(error => {
+            console.log(error);
+            Loader().stop();
+        })
+    };
+
+    deleteHandler = () => {
+        Loader().start();
+        deletePlace(this.data.Id).then(data => {
+            console.log(data);
+            Loader().stop();
+        }).catch(error => {
+            console.log(error);
+            Loader().stop();
+        })
     };
 
     render() {
@@ -69,19 +88,18 @@ export default class Account extends Component {
             userData: '',
             places: ''
         };
-        Loader().start();
     }
 
     componentDidMount() {
-        getFilterredPlaces('b31c021d-4d90-4448-b90c-75cac8a8dcea').then(data => {
+        Loader().start();
+        getFilterredPlaces(this.id).then(data => {
             const cards = this.renderUserCards(data.Places);
 
             this.setState({
                 userData: data.Places[0],
                 places: cards
             });
-
-            setTimeout(() => Loader().stop(), 500);
+            Loader().stop();
         });
     }
 
@@ -103,14 +121,30 @@ export default class Account extends Component {
     };
 
     exitHandler = () => {
-      deleteCookie('SessionId');
-      deleteCookie('UserId');
-      store.isLoggedIn = false;
-      updateDOM();
+        deleteCookie('SessionId');
+        deleteCookie('UserId');
+        store.isLoggedIn = false;
+        updateDOM();
+    };
+
+    addHandler = () => {
+        Loader().start();
+        addPlace('Danila',
+            'Qwert',
+            'srdxfcjdc wndjwnklndk wjndkqwn wqd jnqj2 wjdnqj q ',
+            '300',
+            '8913 932 98765').then(data => {
+            console.log(data);
+            Loader().stop();
+        }).catch(error => {
+            console.log(error);
+            Loader().stop();
+        })
     };
 
     render() {
-        const {Name, Address} = this.state.userData;
+        if (this.state.userData)
+            var {Name, Address} = this.state.userData;
 
         return (
             <Fragment>
@@ -118,22 +152,39 @@ export default class Account extends Component {
                 <PageName name={"Ваш личный кабинет"}/>
                 <div className='main__content content'>
                     <div className='wrapper _column'>
-                        <div className='place__wrapper'>
-                            <div className='place__head '>
-                                <div className='place__photo-wrapper'>
-                                    <img className='place__photo' src={noAvatar}/>
-                                </div>
-                                <div className='place__head-info'>
-                                    <div className='user__name _place'>{Name}</div>
-                                    <div className='user__location'>{Address}</div>
-                                </div>
-                                <div className='place__cost'>
+                        <div className='account__wrapper'>
+                            <div className='account__head '>
+                                {this.state.userData ? <Fragment>
+                                        <div className='account__photo-wrapper'>
+                                            <img className='account__photo' src={noAvatar}/>
+                                        </div>
+                                        <div className='account__head-info'>
+                                            <div className='user__name _account'>{Name}</div>
+                                            <div className='user__location'>{Address}</div>
+                                        </div>
+                                    </Fragment> :
+                                    <Fragment>
+                                        <div className='account__empty'>
+                                            <div className='account__empty_title'>У вас пока нет объявлений, самое время
+                                                предложить свои услуги!
+                                            </div>
+                                            <button onClick={this.addHandler} className='form__button _addBtn'>Добавить
+                                                объявление
+                                            </button>
+                                        </div>
+                                    </Fragment>}
+
+                                <div className='account__button'>
                                     <button onClick={this.exitHandler} className='form__button'>Выйти</button>
                                 </div>
                             </div>
-                            <div className='card-list'>
-                                {this.state.places && this.state.places}
-                            </div>
+
+                            {this.state.userData && <Fragment>
+                                <div className='card-list'>
+                                    {this.state.places && this.state.places}
+                                </div>
+                            </Fragment>}
+
                         </div>
                     </div>
                 </div>

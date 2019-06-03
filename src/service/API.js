@@ -2,13 +2,25 @@ import user1 from "../images/user1.jpg";
 import user2 from "../images/user2.jpg";
 import user3 from "../images/user3.jpg";
 
-export {getCatalog,getFilterredPlaces, register, auth, setCookie, getCookie, deleteCookie, isLoggedIn};
+export {
+    addPlace,
+    deletePlace,
+    editPlace,
+    getCatalog,
+    getFilterredPlaces,
+    register,
+    auth,
+    setCookie,
+    getCookie,
+    deleteCookie,
+    isLoggedIn
+};
 const path = 'https://animalhotelapi.azurewebsites.net';
 
 function getCatalog(id = '') {
     return fetch(`${path}/api/Places/${id}`)
         .then(response => {
-            if (Math.round(response.status/100) !== 2)
+            if (Math.round(response.status / 100) !== 2)
                 throw new Error('');
             return (response.json());
         })
@@ -27,7 +39,7 @@ function register(login, password, confirmPassword) {
     };
     return fetch(`${path}/api/Register`, options)
         .then(response => {
-            if (Math.round(response.status/100) !== 2)
+            if (Math.round(response.status / 100) !== 2)
                 throw new Error('');
             return (response.json());
         })
@@ -46,7 +58,7 @@ function auth(login, password) {
     };
     return fetch(`${path}/api/Auth`, options)
         .then(response => {
-            if (Math.round(response.status/100) !== 2)
+            if (Math.round(response.status / 100) !== 2)
                 throw new Error('');
             return (response.json());
         })
@@ -55,7 +67,7 @@ function auth(login, password) {
 function getFilterredPlaces(param) {
     return fetch(`${path}/api/Places/?placeFilterInfo.ownerId=${param}`)
         .then(response => {
-            if (Math.round(response.status/100) !== 2)
+            if (Math.round(response.status / 100) !== 2)
                 throw new Error('');
             return (response.json());
         })
@@ -63,6 +75,69 @@ function getFilterredPlaces(param) {
             console.log(error);
         });
 }
+
+function addPlace(name, address, description, price, contacts) {
+    let options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            "Name": name,
+            "Address": address,
+            "Description": description,
+            "Price": price,
+            "Contacts": contacts
+        })
+    };
+    return fetch(`${path}/api/Places`, options)
+        .then(response => {
+            if (Math.round(response.status / 100) !== 2)
+                throw new Error('');
+            return (response.json());
+        })
+}
+
+function deletePlace(id) {
+    let options = {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: 'include'
+    };
+    return fetch(`${path}/api/Places/${id}`, options)
+        .then(response => {
+            if (Math.round(response.status / 100) !== 2)
+                throw new Error('');
+            return (response.json());
+        })
+}
+
+function editPlace(id, name, address, description, price, contacts) {
+    let options = {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            "Name": name,
+            "Address": address,
+            "Description": description,
+            "Price": price,
+            "Contacts": contacts
+        })
+    };
+    return fetch(`${path}/api/Places/${id}`, options)
+        .then(response => {
+            if (Math.round(response.status / 100) !== 2)
+                throw new Error('');
+            return (response.json());
+        })
+}
+
 
 function setCookie(name, value, options) {
     options = options || {};

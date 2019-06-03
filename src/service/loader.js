@@ -76,7 +76,7 @@ export default function Loader() {
             clearInterval(timerId);
             timerId = 0;
             loaderLayout.remove();
-        }, 1000);
+        }, 200);
     }
 
     return{
