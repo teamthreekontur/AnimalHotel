@@ -7,6 +7,7 @@ export {
     deletePlace,
     editPlace,
     getCatalog,
+    getPricedPlaces,
     getFilterredPlaces,
     register,
     auth,
@@ -66,6 +67,18 @@ function auth(login, password) {
 
 function getFilterredPlaces(param) {
     return fetch(`${path}/api/Places/?placeFilterInfo.ownerId=${param}`)
+        .then(response => {
+            if (Math.round(response.status / 100) !== 2)
+                throw new Error('');
+            return (response.json());
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+function getPricedPlaces(min, max) {
+    return fetch(`${path}/api/Places/?placeFilterInfo.priceMin=${min}&placeFilterInfo.priceMax=${max}`)
         .then(response => {
             if (Math.round(response.status / 100) !== 2)
                 throw new Error('');

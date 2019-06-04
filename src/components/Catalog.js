@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from "react";
 import PageName from "./PageName"
-import {getCatalog} from "../service/API"
+import {getCatalog, getFilterredPlaces, getPricedPlaces} from "../service/API"
 import Loader from "../service/loader";
 import {Link} from "react-router-dom";
 import '../styles/style.css';
@@ -13,47 +13,87 @@ import noAvater from '../images/no-avatar.jpg'
 
 class SearchForm extends Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {
+            valueMin: '',
+            valueMax: '',
+        };
     }
+
+    handleChangeMin = (event) => {
+        const value = event.target.value;
+        this.setState({valueMin: value});
+    };
+
+    handleChangeMax = (event) => {
+        const value = event.target.value;
+        this.setState({valueMax: value});
+    };
+
+    searchHandler = (event) => {
+        event.preventDefault();
+        const {valueMin, valueMax} = this.state;
+        getPricedPlaces(valueMin, valueMax).then(data => {
+            this.props.onSearch(data);
+        })
+    };
 
     render() {
         return (
             <Fragment>
                 <form className='main__searchForm'>
-                    <div className='searchForm__block'>
-                        <div className='block__name'>Животное</div>
-                        <select>
-                            <option>Собака</option>
-                            <option>Кошка</option>
-                        </select>
-                    </div>
+                    <div className='searchForm-wrapper'>
+                        <div className='searchForm__column'>
+                            <div className='searchForm__block'>
+                                <div className='block__name'>Животное</div>
+                                <select className='form_input _select'>
+                                    <option>Собака</option>
+                                    <option>Кошка</option>
+                                </select>
+                            </div>
 
-                    <div className='searchForm__block'>
-                        <div className='block__name'>Даты передержки</div>
-                        <div className='block__content'>
-                            <input type='text'/>
-                            -
-                            <input type='text'/>
+                            <div className='searchForm__block'>
+                                <div className='block__name'>Район</div>
+                                <select className='form_input _select'>
+                                    <option>Центральный</option>
+                                    <option>Ленинский</option>
+                                    <option>Калининский</option>
+                                    <option>Заельцовский</option>
+                                    <option>Кировский</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className='searchForm__column'>
+                            <div className='searchForm__block'>
+                                <div className='block__name'>Стоимость в день</div>
+                                <div className='block__content'>
+                                    от
+                                    <input placeholder='0' maxLength='5' value={this.state.valueMin} onChange={this.handleChangeMin}
+                                           className='form_input _select' type='text'/>
+                                    до
+                                    <input placeholder='99999' maxLength='5' value={this.state.valueMax} onChange={this.handleChangeMax}
+                                           className='form_input _select' type='text'/>
+                                </div>
+                            </div>
+
+                            <div className='searchForm__block'>
+                                <div className='block__name'>Даты передержки</div>
+                                <div className='block__content'>
+                                    с
+                                    <input  className='form_input _select' type='date'/>
+                                    по
+                                    <input  className='form_input _select' type='date'/>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className='searchForm__block'>
-                        <div className='block__name'>Район</div>
-                        <select>
-                            <option>Центральный</option>
-                            <option>Ленинский</option>
-                        </select>
+                    <div className='addBtn-wrapper'>
+                        <button onClick={this.searchHandler} className='form__button _addBtn'>Поиск
+                        </button>
                     </div>
-
-                    <div className='searchForm__block'>
-                        <div className='block__name'>Стоимость в день</div>
-                        <div className='block__content'>
-                            <input type='date'/>
-                            -
-                            <input type='date'/>
-                        </div>
-                    </div>
-
                 </form>
+
             </Fragment>
         );
     }
@@ -106,7 +146,7 @@ class Card extends Component {
 
     render() {
         return (
-            <Link to={`/${this.data.Id}`}  className='list__user user link'>
+            <Link to={`/${this.data.Id}`} className='list__user user link'>
                 {this.createUserAvatar(this.data)}
                 {this.createUserInfoBlock(this.data)}
                 {this.createCostBlock(this.data)}
@@ -121,20 +161,30 @@ export default class Catalog extends Component {
         this.state = {
             catalogData: null
         };
-        Loader().start();
         // this.pageName = this.props.pageName;
     }
 
     componentDidMount() {
+        Loader().start();
         getCatalog().then(data => {
             const cards = this.renderUserCards(data.Places);
 
             this.setState({
                 catalogData: cards
             });
-            setTimeout(() => Loader().stop(), 500);
+            setTimeout(() => Loader().stop(), 300);
         });
     }
+
+    searchHandler = (data) => {
+        Loader().start();
+
+        const cards = this.renderUserCards(data.Places);
+        this.setState({
+            catalogData: cards
+        });
+        setTimeout(() => Loader().stop(), 300);
+    };
 
     componentWillUnmount() {
         this.setState({
@@ -159,7 +209,7 @@ export default class Catalog extends Component {
                 <PageName name={"Поиск Зооняни"}/>
                 <div className='main__content content'>
                     <div className='wrapper _column'>
-                        <SearchForm/>
+                        <SearchForm onSearch={this.searchHandler}/>
                         <div className='card-list'>
                             {this.state.catalogData && this.state.catalogData}
                         </div>

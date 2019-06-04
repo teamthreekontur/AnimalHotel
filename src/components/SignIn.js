@@ -60,7 +60,7 @@ export default class SignIn extends Component {
                 updateDOM();
             }).catch(error => {
                 if (error.message === '404')
-                    this.handleError('Такого пользователя н существует');
+                    this.handleError('Такого пользователя не существует');
                 return
             })
         }
