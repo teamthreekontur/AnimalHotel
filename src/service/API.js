@@ -40,7 +40,7 @@ function register(login, password, confirmPassword) {
     return fetch(`${path}/api/Register`, options)
         .then(response => {
             if (Math.round(response.status / 100) !== 2)
-                throw new Error('');
+                throw new Error(response.status.toString());
             return (response.json());
         })
     // return new Promise((resolve, reject) => {
@@ -59,7 +59,7 @@ function auth(login, password) {
     return fetch(`${path}/api/Auth`, options)
         .then(response => {
             if (Math.round(response.status / 100) !== 2)
-                throw new Error('');
+                throw new Error(response.status.toString());
             return (response.json());
         })
 }

@@ -2,6 +2,16 @@ import {Component} from "react";
 import React from "react";
 import '../styles/style.css';
 import '../styles/form.css';
+import {makeStyles} from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+
+
+const useStyles = makeStyles({
+    root: {
+        width: 500,
+    },
+});
+
 
 export default class InputText extends Component {
     constructor(props) {
@@ -10,13 +20,20 @@ export default class InputText extends Component {
             value: '',
             id: this.props.id,
             valid: this.props.valid,
-            classes: 'form_input'
+            classes: 'form_input',
+            open: false
         };
         this.type = props.use;
         this.validationExp = {
             email: "^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$",
             passcode: '(?=^.{12,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$'
+        };
+        this.tooltipError = {
+            email: 'Количество символов от 3 до 255. Формат: example@yourmail.com',
+            passcode: 'Количество символов от 12 до 255. Обязательная хотя бы одна цифра и прописная буква'
         }
+        // this.classes = useStyles();
+
     }
 
     validate = () => {
@@ -25,14 +42,16 @@ export default class InputText extends Component {
                 valid: true,
                 classes: this.state.classes + ' _valid'
             });
+            this.handleTooltipClose();
             if (this.props.onValid)
                 this.props.onValid(true);
         }
         else {
             this.setState({
                 valid: false,
-                classes: this.state.classes + ' _invalid'
+                classes: this.state.classes + ' _invalid',
             });
+            this.handleTooltipOpen();
             if (this.props.onValid)
                 this.props.onValid(false);
         }
@@ -56,18 +75,43 @@ export default class InputText extends Component {
         this.setState({classes: 'form_input'});
     };
 
+    handleTooltipClose = () => {
+        this.setState({
+            open: false
+        })
+    };
+
+    handleTooltipOpen = () => {
+        this.setState({
+            open: true
+        })
+    };
+
     render() {
         let {id, label, type} = this.props;
 
         return (
-            <div className="form_content">
+            <div className={`form_content`}>
                 {/*<label className="input-label" htmlFor={id}>{label}</label>*/}
-                <input className={this.state.classes}
-                       value={this.state.value} onChange={this.handleChange} type={type}
-                       onBlur={this.handleBlur}
-                       onFocus={this.handleFocus}
-                       id={id} name={id}
-                       placeholder={label} required/>
+                <Tooltip open={this.state.open}
+                         title={this.tooltipError[this.type]}
+                         PopperProps={{
+                             disablePortal: true,
+                         }}
+                         onClose={this.handleTooltipClose}
+                         disableFocusListener
+                         disableHoverListener
+                         disableTouchListener
+                         placement="right">
+                    <input className={this.state.classes}
+
+                           value={this.state.value} onChange={this.handleChange} type={type}
+                           onBlur={this.handleBlur}
+                           onFocus={this.handleFocus}
+                           id={id} name={id}
+                           placeholder={label} required/>
+                </Tooltip>
+
             </div>
         )
     }

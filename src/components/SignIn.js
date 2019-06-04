@@ -25,7 +25,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default class SignIn extends Component {
     constructor(props) {
         super(props);
-        this.state = {login: '', passcode1: '', valid: '', open: false};
+        this.state = {login: '', passcode1: '', valid: '', open: false, modalText: ''};
     }
 
     handleInputEmail = (value) => {
@@ -47,7 +47,7 @@ export default class SignIn extends Component {
         Loader().start();
 
         if (!this.state.login || !this.state.passcode1) {
-            this.handleError();
+            this.handleError('Заполните все поля');
             return;
         }
         if (valid) {
@@ -59,17 +59,21 @@ export default class SignIn extends Component {
                 store.isLoggedIn = true;
                 updateDOM();
             }).catch(error => {
-                this.handleError();
+                if (error.message === '404')
+                    this.handleError('Такого пользователя н существует');
                 return
             })
         }
         else {
-            this.handleError();
+            this.handleError('Проверьте корректность заполнения полей');
             return
         }
     };
 
-    handleError = () => {
+    handleError = (message) => {
+        this.setState({
+            modalText: message
+        });
         Loader().stop();
         this.handleClickOpen();
     };
@@ -106,7 +110,7 @@ export default class SignIn extends Component {
                     <DialogTitle id="alert-dialog-slide-title">{"Данные введены не верно!"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-slide-description">
-                            Проверьте корректность заполнения полей
+                            {this.state.modalText}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

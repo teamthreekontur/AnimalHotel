@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default class SignUp extends Component {
     constructor(props) {
         super(props);
-        this.state = {login: '', passcode1: '', passcode2: '', valid: false, open: false};
+        this.state = {login: '', passcode1: '', passcode2: '', valid: false, open: false, modalText: ''};
     }
 
     handleInputEmail = (value) => {
@@ -50,8 +50,12 @@ export default class SignUp extends Component {
 
         Loader().start();
 
-        if (!login || !passcode1 || passcode1 !== passcode2) {
-            this.handleError();
+        if (!login || !passcode1 || !passcode2) {
+            this.handleError("Заполните все поля");
+            return;
+        }
+        if (passcode1 !== passcode2) {
+            this.handleError('Пароли не совпадают');
             return;
         }
         if (valid) {
@@ -59,17 +63,21 @@ export default class SignUp extends Component {
             register(login, passcode1, passcode2).then((val) => {
                 Loader().stop();
             }).catch(error => {
-                this.handleError();
+                if (Math.round(error.message / 100) !== 2)
+                    this.handleError();
                 return;
             })
         }
         else {
-            this.handleError();
+            this.handleError('Проверьте корректность заполнения полей');
             return
         }
     };
 
-    handleError = () => {
+    handleError = (message) => {
+        this.setState({
+            modalText: message
+        });
         Loader().stop();
         this.handleClickOpen();
     };
@@ -106,9 +114,7 @@ export default class SignUp extends Component {
                     <DialogTitle id="alert-dialog-slide-title">{"Данные введены не верно!"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-slide-description">
-                            Проверьте корректность заполнения полей:
-                            Пароль должен содержать не менее 12 символов, хотя бы одну цифру и хотя бы одну прописную
-                            букву
+                            {this.state.modalText}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
