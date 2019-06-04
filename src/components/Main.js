@@ -9,6 +9,7 @@ import SignIn from "./SignIn"
 import UserPageFull from './UserPage'
 import NotFound404 from "./NotFound404"
 import Account from "./Account";
+import About from './About';
 
 
 export default class Main extends Component {
@@ -25,6 +26,7 @@ export default class Main extends Component {
                         <Route path='/search' component={Catalog}/>
                         <Route path='/signin' component={SignIn}/>
                         <Route path='/signup' component={SignUp}/>
+                        <Route path='/about' component={About}/>
                         <Route exact path='/account' component={Account}/>
                         <Route path='/' component={UserPageFull}/>
                         <Route component={NotFound404}/>
